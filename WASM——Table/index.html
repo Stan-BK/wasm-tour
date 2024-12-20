@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      // WebAssembly.Table({
+      //     element: "table",
+      //     initial: 10,
+      //     maximum: 20,
+      // })
+      var otherTable = new WebAssembly.Table({ element: "anyfunc", initial: 2 });
+      
+      WebAssembly.instantiateStreaming(fetch("table.wasm")).then(function (obj) {
+        var tbl = obj.instance.exports.tbl;
+        console.log(tbl.get(0)()); // 13
+        console.log(tbl.get(1)()); // 42
+        otherTable.set(0, tbl.get(0));
+        otherTable.set(1, tbl.get(1));
+        console.log(otherTable.get(0)());
+        console.log(otherTable.get(1)());
+      });
+    </script>
+  </body>
+</html>
